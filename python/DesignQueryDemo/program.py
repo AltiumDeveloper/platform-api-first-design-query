@@ -1,13 +1,14 @@
 '''Example query for workspace info.'''
-import os, sys, json
-#from ..NexarClient.nexarClient import NexarClient
+import os, sys
+#from ..AltiumClient.apiClient import AltiumClient
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(SCRIPT_DIR, '..', 'NexarClient'))
-from nexarClient import NexarClient
+sys.path.append(os.path.join(SCRIPT_DIR, '..', 'AltiumClient'))
+from apiClient import AltiumClient
 
 gqlQuery = '''
 query Workspaces {
     desWorkspaceInfos {
+      workspaceId  
       url
       name
       description
@@ -34,19 +35,36 @@ query Projects($url: String!, $end: String) {
 
 if __name__ == '__main__':
 
-    clientId = os.environ['NEXAR_CLIENT_ID']
-    clientSecret = os.environ['NEXAR_CLIENT_SECRET']
-    nexar = NexarClient(clientId, clientSecret, ['design.domain', 'user.access', 'offline_access'])
+    print("Altium 365 platform-api-first-design-query")
+    
+    clientId = None
+    clientSecret = None
+    refreshToken = None
 
-    workspaces = nexar.get_query(gqlQuery)['desWorkspaceInfos']
+    pat = os.environ.get('A365_PAT')
+    
+    if pat is None:
+        clientId = os.environ.get('A365_CLIENT_ID')
+        clientSecret = os.environ.get('A365_CLIENT_SECRET')
+        refreshToken = os.environ.get('A365_REFRESH_TOKEN')
+        if any(v is None for v in (clientId, clientSecret, refreshToken)):
+            sys.exit("Missing environment variable(s). Please set A365_PAT or the triplet A365_CLIENT_ID / A365_CLIENT_SECRET / A365_REFRESH_TOKEN then retry.")
+    
+    client = AltiumClient(clientId, clientSecret, refreshToken, pat, ['design.domain', 'user.access', 'offline_access'])
+
+    workspaces = client.get_query(gqlQuery)['desWorkspaceInfos']
+    grid_prefix = "grid:global::platform:workspace/"
     for workspace in workspaces:
+        if not client.token_workspace_scope_match(workspace['workspaceId'].removeprefix(grid_prefix)):
+            continue
+            
         variables = {
             'url': workspace['url']
         }
-        nexar.api_url = workspace['location']['apiServiceUrl']
-        print(f'projects for workspace: {workspace["name"]} ({nexar.api_url})')
+        client.api_url = workspace['location']['apiServiceUrl']
+        print(f'projects for workspace: {workspace["name"]} ({client.api_url})')
 
-        for page in nexar.NodeIter(gqlQuery2, variables, lambda x: x['desProjects']):
+        for page in client.NodeIter(gqlQuery2, variables, lambda x: x['desProjects']):
             for project in page:
                 print(f'Project Id: {project["id"]}')
                 print(f'Name: {project["name"]}')
