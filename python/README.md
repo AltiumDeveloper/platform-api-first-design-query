@@ -1,14 +1,25 @@
 # platform-api-first-design-query
 [365.altium.com]: https://365.altium.com/
 
-Simple console app which looks up projects in an Altium 365 workspace.
+Simple console app which illustrates a number of queries in Altium 365 
+- Hello Workspace basic demo that gets metadate from your Altium 365 workspace
+- Project demo which looks up project details from your Altium 365 workspace.
 
-## Prerequisites
+# Prerequisites
 
 You need your Altium Live credentials and have to be a member of at least one Altium 365 workspace.
 
 In addition, you need an application at [365.altium.com].
-When you create your application, you have two options regarding the token to use in `platform-api-first-design-query`:
+
+## Hello Workspace
+When you create your application:
+- generate a Personal Access Token (PAT), by unticking the Refresh Token option
+- paste that into `PAT` variable in `hello_workspace.py`
+- make sure you point `WORKSPACE_URL` to your workspace
+
+## Project demo
+
+When you create your application, you have two options regarding the token to use in `project_demo.py`:
 - either generate a Personal Access Token (PAT), by unticking the Refresh Token option
 - or generate a triplet: Client ID, Client Secret and Refresh Token, by ticking the Refresh Token option 
 
