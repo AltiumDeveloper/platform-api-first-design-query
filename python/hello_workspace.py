@@ -1,6 +1,6 @@
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'AltiumClient'))
-from standaloneApiClient import StandaloneAltiumClient
+from standalone_api_client import StandaloneAltiumClient
 
 if __name__ == '__main__':
     # *** Paste your Personal Access Token and Workspace URL here. No token? Visit https://developer.altium.com ***
