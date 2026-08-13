@@ -1,37 +1,37 @@
 import os, sys
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(SCRIPT_DIR, '..', 'AltiumClient'))
-from apiClient import AltiumClient
+sys.path.append(os.path.join(SCRIPT_DIR, '..', '..', 'AltiumClient'))
+from api_client import AltiumClient
 
-sys.path.append(os.path.join(SCRIPT_DIR, '..', 'Queries'))
 from workspace import query_workspace_DesWorkspaceInfos
 from project import query_project_desProjects
 from project import query_project_desProjectById
 
-sys.path.append(os.path.join(SCRIPT_DIR, '..', 'Helpers'))
+sys.path.append(os.path.join(SCRIPT_DIR, '..', '..', 'Helpers'))
 from utils import print_delimiter_1
 from utils import print_delimiter_2
 from utils import print_nested
 
 if __name__ == '__main__':
 
-    print("Altium 365 platform-api-first-design-query")
+    print("Altium 365 platform-api-first-query")
     print_delimiter_1()
     
-    clientId = None
-    clientSecret = None
-    refreshToken = None
+    # *** Paste your credentials here. Use a PAT, or a Client ID / Client Secret / Refresh Token. No token? Visit https://developer.altium.com ***
+    PAT = ''
+    CLIENT_ID = ''
+    CLIENT_SECRET = ''
+    REFRESH_TOKEN = ''
 
-    pat = os.environ.get('A365_PAT')
-    
-    if pat is None:
-        clientId = os.environ.get('A365_CLIENT_ID')
-        clientSecret = os.environ.get('A365_CLIENT_SECRET')
-        refreshToken = os.environ.get('A365_REFRESH_TOKEN')
-        if any(v is None for v in (clientId, clientSecret, refreshToken)):
-            sys.exit("Missing environment variable(s). Please set A365_PAT or the triplet A365_CLIENT_ID / A365_CLIENT_SECRET / A365_REFRESH_TOKEN then retry.")
-    
+    pat = PAT or None
+    clientId = CLIENT_ID or None
+    clientSecret = CLIENT_SECRET or None
+    refreshToken = REFRESH_TOKEN or None
+
+    if pat is None and any(v is None for v in (clientId, clientSecret, refreshToken)):
+        sys.exit("Set your credentials at the top of this file: either PAT, or CLIENT_ID / CLIENT_SECRET / REFRESH_TOKEN.")
+
     client = AltiumClient(clientId, clientSecret, refreshToken, pat, ["design.domain", "user.access", "offline_access"])
 
     workspaces = client.get_query(query_workspace_DesWorkspaceInfos)["desWorkspaceInfos"]

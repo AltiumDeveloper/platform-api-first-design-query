@@ -7,7 +7,7 @@ import time
 from typing import Callable, Dict, Iterator
 
 import jwt
-from a365Token import get_access_token_using_refresh_token
+from a365_token import get_access_token_using_refresh_token
 
 PROD_A365_URL = "https://eur.365.altium.com/napi/gateway/graphql"
 
