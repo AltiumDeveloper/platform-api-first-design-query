@@ -1,7 +1,7 @@
 query_workspace_DesWorkspaceInfos = '''
 query Workspaces {
     desWorkspaceInfos {
-      workspaceId  
+      workspaceId
       url
       name
       description
