@@ -4,7 +4,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(SCRIPT_DIR, '..', '..', 'AltiumClient'))
 from api_client import AltiumClient
 
+sys.path.append(os.path.join(SCRIPT_DIR, '..'))
 from workspace import query_workspace_DesWorkspaceInfos
+
 from project import query_project_desProjects
 from project import query_project_desProjectById
 
